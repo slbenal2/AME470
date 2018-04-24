@@ -1,5 +1,6 @@
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scale=0, max-width=1.0">
   <script src='asyncReq.js'></script>
   <script src='jquery-3.3.1.min.js'></script>
   <script src='ac.js'></script>
@@ -81,7 +82,7 @@ body{
       width: 250px;
       min-height: 100%;
       background: gray;
-    } 
+    }
     #theInspector{
       float:right;
       width: 250px;
@@ -90,13 +91,13 @@ body{
       top: 0px;
     position: absolute;
     right: 0px;
-    } 
+    }
     #rssBox{
       float:left;
       width: 250px;
       min-height: 100%;
       background: lightgray;
-    } 
+    }
     #theDetails{
       width: calc(100% - 500px);
       min-height: 100%;
@@ -187,7 +188,7 @@ var currSelection;
     setFilters(n)
     // Instead of the above resetFilters(), init the filters stored by user and apply it!
     document.getElementById("theDetails").style.backgroundImage = "url(" + imgURL + ")";
-   
+
     $("#theImageList .item").removeClass("active");
     $("#theImageList .item:nth-of-type(" + (n+1) + ")").addClass("active");
   }
@@ -214,7 +215,7 @@ var currSelection;
           }
           $("#theImageList").html(markup);
           imgSelected(0);
-        }     
+        }
         ac.hide();
     });
   }
@@ -268,7 +269,7 @@ var currSelection;
       document.getElementById("opacity").value = obj.opacity || "100";
       document.getElementById("saturate").value = obj.saturate || "100";
       document.getElementById("sepia").value = obj.sepia || "0";
-      applyFilter();  
+      applyFilter();
   }
 
   function resetFilters()
@@ -309,7 +310,7 @@ var currSelection;
       filter += " sepia(" + sepia + ") ";
 
       document.getElementById("theDetails").style.filter = filter;
-    
+
       currRSSFeedList[n].blur = parseInt(blur);
       currRSSFeedList[n].brightness = parseInt(brightness);
       currRSSFeedList[n].contrast = parseInt(contrast);
@@ -319,8 +320,8 @@ var currSelection;
       currRSSFeedList[n].opacity = parseInt(opacity);
       currRSSFeedList[n].saturate = parseInt(saturate);
       currRSSFeedList[n].sepia = parseInt(sepia);
-      
-      var url = "./updateImg?id=" + currRSSFeedList[n].id 
+
+      var url = "./updateImg?id=" + currRSSFeedList[n].id
         + "&blur=" + parseInt(blur)
         + "&brightness=" + parseInt(brightness)
         + "&contrast=" + parseInt(contrast)
