@@ -59,7 +59,7 @@ app.get("/updateImg", function (req, res) {
   var data = req.query;
   var keys = Object.keys(data);
   var id = data.id;
- 
+
   db.collection("img").findOne({id:id}, function(err, result){
       console.log(id, err, result);
       for(var i = 0; i < keys.length; i++){

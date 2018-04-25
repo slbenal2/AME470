@@ -1,19 +1,63 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scale=0, max-width=1.0">
+
   <script src='asyncReq.js'></script>
   <script src='jquery-3.3.1.min.js'></script>
   <script src='ac.js'></script>
   <link rel="stylesheet" type="text/css" href="ac.css">
   <style>
-#theInspector input[type=range]{
-    width: 65%;
-    display: inline-block;
+.hiddeninall{
+  display: none;
 }
-#theInspector label{
-    width: 30%;
-    display: inline-block;
-    text-align: right;
+body{
+  margin: 0px;
+}
+.halfInSmall{
+  width: 50%!important;
+  margin-left: 0%!important;
+}
+
+ @media (max-width: 500px){
+   #allImagesWrapper{
+     width: 50%!important;
+   }
+#theInspector{
+    width: 50%;!important;
+}
+.hiddeninSmall{
+       display: none;
+    }
+     .hiddeninBig{
+       display: block;
+       margin: 10px;
+}
+#theInspector{
+    width: 100%;
+}
+
+.bigInSmall{
+  width: 100%!important;
+  margin-left: 0%!important;
+}
+}
+@media (min-width: 500px){ /* shrinks when reaches 500px*/
+      #allImagesWrapper, #theDetails{
+        width: 250px;
+        max-height: 100%;
+        overflow: scroll;
+      }
+   .hiddeninSmall{
+     display: block;
+   }
+   .hiddeninBig{
+     display: none;
+   }
+}
+#theInspector input[type=range]{
+  width: 65%;
+  display: inline-block;
+  text-align: right;
 }
 body{
   margin: 0px;
@@ -110,7 +154,93 @@ body{
     }
   </style>
   <script>
-  function renameClicked(n){
+  function goBackToMain()
+  {
+$("#allImagesWrapper").removeClass("hiddeninSmall");
+$("#theDetails").removeClass("bigInSmall");
+$("theDetails").addClass("hiddeninSmall");
+$("theDetails").removeClass("halfInSmall");
+$("theInspector").addClass("hiddeninSmall");
+
+}
+function goToInspector()
+{
+  $("#theInspector").removeClass("hiddeninSmall");
+  $("#theDetails").addClass("halfInSmall");
+  $("#theDetails").removeClass("bigInSmall");
+
+}
+function removeInspector()
+{
+  $("#theInspector").addClass("hiddeninSmall");
+  $("#theDetails").removeClass("halfInSmall");
+  $("#theDetails").addClass("bigInSmall");
+}
+function goBackToList(){
+  $("#theInspector").addClass("hiddeninSmall");
+  $("#theDetails").removeClass("halfInSmall");
+}
+
+function renameClicked(n){
+  var currName = currRSSFeedList[n].name;
+  var id = currRSSFeedList[n].id;
+  var x = prompt("Rename Feed", currName);
+  console.log(x);
+  if(x){
+    var url = "./renameFeed?name=" + encodeURIComponent(x);
+    url += "&id=" + id;
+    loadFile(url, function(resData){
+        start();
+    });
+  }
+}
+function deleteClicked(n){
+  var id = currRSSFeedList[n].id;
+  var x = confirm("Delete Feed?");
+  if(x){
+    var url = "./deleteFeed?id=" + id;
+    loadFile(url, function(resData){
+        start();
+    });
+  }
+}
+function getDataFromServer(){
+  //var url = "./eval?eq=34-4*45";
+  var url = "https://rss.itunes.apple.com/api/v1/us/apple-music/hot-tracks/all/10/explicit.json";
+  loadFile(url, function(resData){
+    $("#result").val(resData);
+  });
+}
+var currRSSData = null;
+function changeRSSSrc()
+{
+  var feedURL = prompt("Enter your RSS feed URL:");
+  var url = "./getFeedData?url=" + feedURL;
+  loadRSS(url);
+}
+function feedSelected(n)
+{
+  ac.show();
+  var feedURL = currRSSFeedList[n].url;
+  var url = "./getFeedData?url=" + feedURL;
+  loadRSS(url);
+  $("#allRSSFeeds").addClass("hiddeninSmall");
+  $("#theFeedList .item").removeClass("active");
+  $("#theFeedList .item:nth-of-type(" + (n+1) + ")").addClass("active");
+}
+
+function addImgSrc()
+{
+  var feedURL = prompt("Enter new image URL:");
+  var url = "./addImg?url=" + feedURL;
+  url += "&date=" + new Date().getTime();
+  url += "&name=Untitled";
+  url += "&id=test" + new Date().getTime();
+  loadFile(url, function(resData){
+    start();
+  })
+}
+
     var currName = currRSSFeedList[n].name;
     var id = currRSSFeedList[n].id;
     var x = prompt("Rename Feed", currName);
@@ -189,6 +319,10 @@ var currSelection;
     // Instead of the above resetFilters(), init the filters stored by user and apply it!
     document.getElementById("theDetails").style.backgroundImage = "url(" + imgURL + ")";
 
+
+    $("#theDetails").addClass("hiddeninSmall");
+    $("#allImagesWrapper").addClass("hiddeninSmall");
+    $("#theDetails").addClass("bigInSmall");
     $("#theImageList .item").removeClass("active");
     $("#theImageList .item:nth-of-type(" + (n+1) + ")").addClass("active");
   }
@@ -196,6 +330,10 @@ var currSelection;
   function start()
   {
     ac.show();
+$("#theInspector").addClass("hiddeninSmall");
+$("#theDetails").addClass("bigInSmall");
+
+
     var url = "./getAllImgs";
     loadFile(url, function(resData){
       console.log(resData);
